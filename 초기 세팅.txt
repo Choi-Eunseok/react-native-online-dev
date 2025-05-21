@@ -1,0 +1,14 @@
+sudo apt install linux-modules-extra-`uname -r`
+
+sudo modprobe binder_linux devices="binder,hwbinder,vndbinder"
+// 매번 reboot 이후 실행
+sudo modprobe ashmem_linux
+// 이거 실패 (실패해도 혹시 몰라 일단 돌림)
+
+sudo apt install qemu-user-static
+// arm 이면 실행
+
+chmod +x ./MobileApp/android/gradlew
+
+
+해당 머신 내부 ip:3000 페이지 접속

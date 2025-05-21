@@ -1,0 +1,74 @@
+services:
+  android:
+    image: redroid/redroid:12.0.0_64only-latest
+    privileged: true
+    ports:
+      - "15555:5555"
+    pull_policy: always
+
+  vnc-server:
+    image: ces21/adb-vnc-server:latest
+    ports:
+      - "15901:5901"
+    environment:
+      - ADB_IP=android
+      - ADB_PORT=5555
+
+  android-build:
+    image: ces21/react-native-android:latest
+    volumes:
+      - ./MobileApp:/app/MobileApp
+      - ./android-build/build_and_install.sh:/app/build_and_install.sh
+    network_mode: "host"
+    environment:
+      - ADB_IP=localhost
+      - ADB_PORT=15555
+      - METRO_PORT=18081
+    command: ["/bin/bash", "/app/build_and_install.sh"]
+
+  metro:
+    image: ces21/npmserver:latest
+    working_dir: /app/MobileApp
+    volumes:
+      - ./MobileApp:/app/MobileApp
+    depends_on:
+      - android-build
+    ports:
+      - "18081:8081"
+
+  backend:
+    image: ces21/assignment2-backend:latest
+    volumes:
+      - ./MobileApp:/app/../MobileApp
+    ports:
+      - "14000:4000"
+
+  frontend:
+    image: ces21/assignment2-frontend:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_BACKEND_PORT=14000
+      - REACT_APP_VNC_PORT=15901
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - vnc-server
+  
+  # frontend-prod:
+  #   build: 
+  #     context: frontend
+  #     dockerfile: Dockerfile.prod
+  #   ports:
+  #     - "10080:80"
+  #   environment:
+  #     - REACT_APP_BACKEND_PORT=14000
+  #     - REACT_APP_VNC_PORT=15901
+  #   volumes:
+  #     - ./frontend:/app
+  #     - /app/node_modules
+  #   depends_on:
+  #     - vnc-server
