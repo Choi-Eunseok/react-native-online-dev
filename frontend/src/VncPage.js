@@ -3,7 +3,7 @@ import VncDisplay from 'react-vnc-display';
 function VncPage() {
   const vncRef = useRef();
   const [resolution, setResolution] = useState({ width: 480, height: 800 });
-  const vncPort = process.env.REACT_APP_VNC_PORT || 5901;
+  // const vncPort = process.env.REACT_APP_VNC_PORT || 5901;
 
   useEffect(() => {
     fetch('/vnc_resolution.txt')
@@ -43,7 +43,7 @@ function VncPage() {
         display: "flex",
       }}>
       <VncDisplay
-        url={`ws://localhost:${vncPort}`}
+        url={`wss://vnc.react-native.choies.dev`}
         showDotCursor
         scaleViewport={false}
         resizeSession={false}

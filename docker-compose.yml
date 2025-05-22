@@ -7,7 +7,7 @@ services:
     pull_policy: always
 
   vnc-server:
-    image: ces21/adb-vnc-server:latest
+    build: vnc-server
     ports:
       - "15901:5901"
     environment:
@@ -15,7 +15,7 @@ services:
       - ADB_PORT=5555
 
   android-build:
-    image: ces21/react-native-android:latest
+    build: android-build
     volumes:
       - ./MobileApp:/app/MobileApp
       - ./android-build/build_and_install.sh:/app/build_and_install.sh
@@ -27,7 +27,7 @@ services:
     command: ["/bin/bash", "/app/build_and_install.sh"]
 
   metro:
-    image: ces21/npmserver:latest
+    build: MobileApp
     working_dir: /app/MobileApp
     volumes:
       - ./MobileApp:/app/MobileApp
@@ -37,38 +37,35 @@ services:
       - "18081:8081"
 
   backend:
-    image: ces21/assignment2-backend:latest
+    build: backend
     volumes:
       - ./MobileApp:/app/../MobileApp
     ports:
       - "14000:4000"
 
-  frontend:
-    image: ces21/assignment2-frontend:latest
-    ports:
-      - "3000:3000"
-    environment:
-      - REACT_APP_BACKEND_PORT=14000
-      - REACT_APP_VNC_PORT=15901
-      - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    depends_on:
-      - vnc-server
-  
-  # frontend-prod:
-  #   build: 
-  #     context: frontend
-  #     dockerfile: Dockerfile.prod
+  # frontend:
+  #   image: ces21/assignment2-frontend:latest
   #   ports:
-  #     - "10080:80"
+  #     - "3000:3000"
   #   environment:
   #     - REACT_APP_BACKEND_PORT=14000
   #     - REACT_APP_VNC_PORT=15901
+  #     - CHOKIDAR_USEPOLLING=true
+  #     - WATCHPACK_POLLING=true
   #   volumes:
   #     - ./frontend:/app
   #     - /app/node_modules
   #   depends_on:
   #     - vnc-server
+  
+  frontend-prod:
+    build: 
+      context: frontend
+      dockerfile: Dockerfile.prod
+    ports:
+      - "10080:80"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - vnc-server

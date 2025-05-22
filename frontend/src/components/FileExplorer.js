@@ -51,7 +51,7 @@ const ContextMenuItem = styled.li`
 `;
 
 const FileExplorer = ({ onFileSelect }) => {
-  const backendPort = process.env.REACT_APP_BACKEND_PORT || 4000;
+  // const backendPort = process.env.REACT_APP_BACKEND_PORT || 4000;
   const [files, setFiles] = useState(null);
   const [expandedFolders, setExpandedFolders] = useState(new Set());
   const [contextMenu, setContextMenu] = useState(null); // {x, y, target, type}
@@ -59,7 +59,7 @@ const FileExplorer = ({ onFileSelect }) => {
   const menuRef = useRef();
 
   const fetchFileTree = () => {
-    fetch(`http://localhost:${backendPort}/api/file-tree`)
+    fetch(`https://api.react-native.choies.dev/api/file-tree`)
       .then(res => res.json())
       .then(data => {
         setFiles(data);
@@ -98,7 +98,7 @@ const FileExplorer = ({ onFileSelect }) => {
     if (folder && folder.type === 'folder') {
       filePath = folder.name + '/' + name;
     }
-    await fetch(`http://localhost:${backendPort}/api/files`, {
+    await fetch(`https://api.react-native.choies.dev/api/files`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: filePath, content: '' })
@@ -109,7 +109,7 @@ const FileExplorer = ({ onFileSelect }) => {
 
   const handleDeleteFile = async (file) => {
     if (!window.confirm(`${file.name} 파일을 삭제할까요?`)) return;
-    await fetch(`http://localhost:${backendPort}/api/files/${file.name}`, { method: 'DELETE' });
+    await fetch(`https://api.react-native.choies.dev/files/${file.name}`, { method: 'DELETE' });
     setContextMenu(null);
     fetchFileTree();
   };

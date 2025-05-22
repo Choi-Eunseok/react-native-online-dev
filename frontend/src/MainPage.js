@@ -78,7 +78,7 @@ const TabClose = styled.span`
 `;
 
 function MainPage() {
-  const backendPort = process.env.REACT_APP_BACKEND_PORT || 4000;
+  // const backendPort = process.env.REACT_APP_BACKEND_PORT || 4000;
   const iframeRef = useRef(null);
   const [resolution, setResolution] = useState({ width: 480, height: 800 });
   const [scale, setScale] = useState(1);
@@ -133,7 +133,7 @@ function MainPage() {
     if (!selectedFile) return;
     const fetchContent = async () => {
       try {
-        const response = await fetch(`http://localhost:${backendPort}/api/files/${selectedFile.name}`);
+        const response = await fetch(`https://api.react-native.choies.dev/api/files/${selectedFile.name}`);
         if (!response.ok) throw new Error('Failed to read file');
         const content = await response.text();
         setFileContent(content);
@@ -169,7 +169,7 @@ function MainPage() {
       return [...prev, { ...file, dirty: false }];
     });
     try {
-      const response = await fetch(`http://localhost:${backendPort}/api/files/${file.name}`);
+      const response = await fetch(`https://api.react-native.choies.dev/api/files/${file.name}`);
       if (!response.ok) throw new Error('Failed to read file');
       const content = await response.text();
       setFileContent(content);
@@ -190,7 +190,7 @@ function MainPage() {
   const handleTabClick = async (file) => {
     setSelectedFile(file);
     try {
-      const response = await fetch(`http://localhost:${backendPort}/api/files/${file.name}`);
+      const response = await fetch(`https://api.react-native.choies.dev/api/files/${file.name}`);
       if (!response.ok) throw new Error('Failed to read file');
       const content = await response.text();
       setFileContent(content);
@@ -239,7 +239,7 @@ function MainPage() {
         if (!selectedFile) return;
         // 저장
         try {
-          const response = await fetch(`http://localhost:${backendPort}/api/files/${selectedFile.name}`, {
+          const response = await fetch(`https://api.react-native.choies.dev/api/files/${selectedFile.name}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ content: fileContent }),

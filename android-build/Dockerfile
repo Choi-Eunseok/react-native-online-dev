@@ -62,16 +62,16 @@ RUN curl -sS https://dl.google.com/android/repository/${SDK_VERSION} -o /tmp/sdk
     && rm -rf ${ANDROID_HOME}/.android \
     && chmod 777 -R /opt/android
 
-RUN dpkg --add-architecture amd64
+# RUN dpkg --add-architecture amd64
 
-RUN cat > /etc/apt/sources.list.d/amd64.list <<EOF
-deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse
-deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse
-deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
-deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-backports main restricted universe multiverse
-EOF
+# RUN cat > /etc/apt/sources.list.d/amd64.list <<EOF
+# deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse
+# deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse
+# deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+# deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-backports main restricted universe multiverse
+# EOF
 
-RUN apt update -qq || echo "apt update failed, continuing anyway"
+# RUN apt update -qq || echo "apt update failed, continuing anyway"
 
-RUN apt install -y aptitude
-RUN aptitude install -y libc6:amd64 zlib1g:amd64
+# RUN apt install -y aptitude
+# RUN aptitude install -y libc6:amd64 zlib1g:amd64
